@@ -1,0 +1,26 @@
+CREATE OR REPLACE FUNCTION reverse_number(input_num IN NUMBER) RETURN NUMBER IS
+    reversed_num NUMBER := 0;
+    remainder NUMBER;
+BEGIN
+    WHILE input_num > 0 LOOP
+        remainder := input_num MOD 10;
+        reversed_num := reversed_num * 10 + remainder;
+        input_num := input_num / 10;
+    END LOOP;
+  
+    RETURN reversed_num;
+END;
+/
+
+
+-------------------------------------------------------------------------------------------
+
+SET SERVEROUTPUT ON;
+DECLARE
+    input_number NUMBER := 5639;
+    reversed_number NUMBER;
+BEGIN
+    reversed_number := reverse_number(input_number);
+    DBMS_OUTPUT.PUT_LINE('Reversed number: ' || reversed_number);
+END;
+/
