@@ -1,0 +1,37 @@
+DECLARE
+    CURSOR movie_cursor IS
+        SELECT movie_id, movie_type, price
+        FROM movies
+        WHERE movie_type IN ('Comedy', 'Thriller')
+        FOR UPDATE OF price;
+
+    movie_rec movie_cursor%ROWTYPE;
+BEGIN
+    OPEN movie_cursor;
+    
+    LOOP
+        FETCH movie_cursor INTO movie_rec;
+        EXIT WHEN movie_cursor%NOTFOUND;
+
+        -- Calculate the new price by adding 2% to the current price
+        movie_rec.price := movie_rec.price + (movie_rec.price * 0.02);
+
+        -- Update the price of the movie
+        UPDATE movies
+        SET price = movie_rec.price
+        WHERE CURRENT OF movie_cursor;
+    END LOOP;
+
+    CLOSE movie_cursor;
+    
+    -- Commit the changes
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Movie prices updated successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Handle exceptions if any
+        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
