@@ -1,26 +1,21 @@
-CREATE OR REPLACE FUNCTION reverse_number(input_num IN NUMBER) RETURN NUMBER IS
-    reversed_num NUMBER := 0;
-    remainder NUMBER;
+CREATE OR REPLACE FUNCTION reverse_number(p_number IN NUMBER) RETURN NUMBER IS
+  v_reversed NUMBER := 0;
+  v_temp NUMBER := p_number;
 BEGIN
-    WHILE input_num > 0 LOOP
-        remainder := input_num MOD 10;
-        reversed_num := reversed_num * 10 + remainder;
-        input_num := input_num / 10;
-    END LOOP;
+  WHILE v_temp > 0 LOOP
+    v_reversed := (v_reversed * 10) + (v_temp MOD 10);
+    v_temp := TRUNC(v_temp / 10);
+  END LOOP;
   
-    RETURN reversed_num;
+  RETURN v_reversed;
 END;
 /
 
-
--------------------------------------------------------------------------------------------
-
-SET SERVEROUTPUT ON;
 DECLARE
-    input_number NUMBER := 5639;
-    reversed_number NUMBER;
+  v_input_number NUMBER := 5639;
+  v_reversed_number NUMBER;
 BEGIN
-    reversed_number := reverse_number(input_number);
-    DBMS_OUTPUT.PUT_LINE('Reversed number: ' || reversed_number);
+  v_reversed_number := reverse_number(v_input_number);
+  DBMS_OUTPUT.PUT_LINE('Reversed number: ' || v_reversed_number);
 END;
 /
